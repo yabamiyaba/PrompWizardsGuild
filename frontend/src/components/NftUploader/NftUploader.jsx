@@ -151,12 +151,13 @@ const NftUploader = () => {
   };
   
 
+  const[data, setData] = useState("da")
   let imgsrc = "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
   const generateImage = async () => {
     url = 'http://localhost:8000/api/member/'+variables[0]+'/'+variables[1]+'/'+variables[2]+'/'+variables[3]+'/'+variables[4]+'/'+variables[5];
     const response = await fetch(url, {method: 'get'});
     const json = response.json();
-    console.log(json)
+    setData(json)
   };
 
   
