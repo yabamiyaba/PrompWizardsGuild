@@ -2,7 +2,6 @@
 import { Button, TextField } from "@mui/material";
 import React from "react";
 import { useEffect, useState } from 'react'
-import ImageLogo from "./image.svg";
 import "./NftUploader.css";
 import { ethers } from "ethers";
 import Web3Mint from "../../utils/Web3Mint.json";
@@ -10,6 +9,7 @@ import { Web3Storage } from 'web3.storage';
 
 const API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDdENzUxY0QyNzA0QzQzNTU2ZjE3ZTNkNDZlYTBBNzRjNDkwQjFBRGEiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NjczMzAyMzU0MDQsIm5hbWUiOiJmaXJzdCJ9.zR2IeP-Wy2dm1PR_hdmRUtBrfYptGESX4YeIW612Xek"
 var url = "";
+
 const NftUploader = () => {
   /*
    * ユーザーのウォレットアドレスを格納するために使用する状態変数を定義します。
@@ -119,37 +119,35 @@ const NftUploader = () => {
     }
   };
 
-  const [name, setName] = useState("my project")
-  const [variables, setVariables] = useState([0, 0, 0, 0, 0, "a", "my project"]);
-  const [prompt, setPrompt] = useState("a");
+  const [variables, setVariables] = useState([0, 0, 0, 0, 0, "", ""]);
   const updateVariables = (e) => {
-    setPrompt(e.target.value);
+    
     setVariables((prevState) => prevState.map((value, index) => (index === 5 ?  e.target.value : value)));
   };
   const updateSeedVal = (e) => {
-    setPrompt(e.target.value);
+    
     setVariables((prevState) => prevState.map((value, index) => (index === 0 ?  e.target.value : value)));
   };
   const updateGuidanceScale = (e) => {
-    setPrompt(e.target.value);
+    
     setVariables((prevState) => prevState.map((value, index) => (index === 1 ?  e.target.value : value)));
   };
   const updateHeight = (e) => {
-    setPrompt(e.target.value);
-    setVariables((prevState) => prevState.map((value, index) => (index === 2 ?  e.target.value : value)));
+    
+    setVariables((prevState) => prevState.map((value, index) => (index === 2 ?  e.target.value * 512 : value)));
   };
   const updateWidth = (e) => {
-    setPrompt(e.target.value);
-    setVariables((prevState) => prevState.map((value, index) => (index === 3 ?  e.target.value : value)));
+    
+    setVariables((prevState) => prevState.map((value, index) => (index === 3 ?  e.target.value * 512: value)));
   };
   const updateSteps = (e) => {
-    setPrompt(e.target.value);
+    
     setVariables((prevState) => prevState.map((value, index) => (index === 4 ?  e.target.value : value)));
   };
 
   const updateName = (e) => {
-    setPrompt(e.target.value);
-    setName((prevState) => prevState.map((value, index) => (index === 6 ?  e.target.value : value)));
+    
+    setVariables((prevState) => prevState.map((value, index) => (index === 6 ?  e.target.value : value)));
   };
   
 
@@ -189,17 +187,16 @@ const NftUploader = () => {
       <h2>NFTアップローダー</h2>
       </div>
       <div className="nameForm"></div>
-	    <fieldset>
-		    <p><legend>呪文を作成</legend></p>
-		    <p><input type="text" name="prompt" size="90" onChange={updateVariables}/></p>
-        <p><input type="range" name="prompt" size="90" onChange={updateSeedVal}/></p>
-        <p><input type="range" name="prompt" size="90" onChange={updateGuidanceScale}/></p>
-        <p><input type="range" name="prompt" size="90" onChange={updateHeight}/></p>
-        <p><input type="range" name="prompt" size="90" onChange={updateWidth}/></p>
-        <p><input type="range" name="prompt" size="90" onChange={updateSteps}/></p>
-	    </fieldset>
+	    
+		    <p>呪文を作成</p>
+		    <input type="text" name="prompt" size="90" onChange={updateVariables}/>
+        <input type="range" name="prompt" size="90" onChange={updateSeedVal} min="0" max="4294967295"/>
+        <input type="range" name="prompt" size="90" onChange={updateGuidanceScale} min="0" max="20"/>
+        <input type="range" name="prompt" size="90" onChange={updateHeight}min="1" max="4"/>
+        <input type="range" name="prompt" size="90" onChange={updateWidth}min="1" max="4"/>
+        <input type="range" name="prompt" size="90" onChange={updateSteps} min="5" max="30"/>
+	    
       
-      <p>{prompt}</p>
       <p>{variables}</p>
       <Button onClick={generateImage}>
       画像を生成
@@ -213,8 +210,10 @@ const NftUploader = () => {
         />
         )}
 
-      <fieldset><p><input type="text" name="prompt" size="90" onChange={updateName}/></p></fieldset>
-      
+      <p><input type="text" size="90" onChange={updateName}/></p>
+      <Button onClick={generateImage}>
+      画像を生成
+      </Button>
       </div> 
       </div>
   );
